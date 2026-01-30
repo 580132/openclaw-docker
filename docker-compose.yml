@@ -6,7 +6,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - ~/.clawdbot:/home/node/.clawdbot
+      - ~/.clawdbot:/home/node/.moltbot
       - ~/clawd:/home/node/clawd
     ports:
       - "18789:18790"

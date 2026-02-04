@@ -14,10 +14,8 @@ RUN apt-get update && apt-get install -y \
     procps \
     file \
     sudo \
-    && rm -rf /var/lib/apt/lists/* \
-    # Fix SSL cert permissions (755/644 are standard Unix permissions for certs)
-    # Allows non-root users to verify SSL connections
-    && chmod 755 /etc/ssl/certs && chmod 644 /etc/ssl/certs/ca-certificates.crt
+    jq \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Bun (required for build)
 RUN curl -fsSL https://bun.sh/install | bash
@@ -77,7 +75,20 @@ RUN mkdir -p /home/node/.openclaw /home/node/.openclaw/workspace \
     && chown -R node:node /usr/local/lib/node_modules \
     && chown -R node:node /usr/local/bin
 
+# Install Playwright system dependencies (as root before switching to node user)
+RUN npx -y playwright@latest install-deps chromium
+
+# Copy SSL certificates to a location accessible by all users
+RUN mkdir -p /usr/local/share/ca-certificates && \
+    cp /etc/ssl/certs/ca-certificates.crt /usr/local/share/ca-certificates/ca-certificates.crt && \
+    chmod 755 /usr/local/share/ca-certificates && \
+    chmod 644 /usr/local/share/ca-certificates/ca-certificates.crt
+
 USER node
+
+# Install Playwright browsers for the node user
+# Use NODE_EXTRA_CA_CERTS to point to accessible certificate bundle
+RUN NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/ca-certificates.crt npx -y playwright@latest install chromium
 
 WORKDIR /home/node
 

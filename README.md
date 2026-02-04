@@ -207,7 +207,14 @@ If you need root/sudo to pull Docker images:
 The container is configured to allow the `node` user to install global npm packages without permission issues. You can install skills using:
 
 ```bash
-docker exec -it openclaw-gateway npm install -g @package/name
+# If using docker compose
+docker compose exec openclaw-gateway npm install -g @package/name
+
+# If using standalone container
+docker exec -it <container_name> npm install -g @package/name
+
+# Find your container name with:
+docker ps
 ```
 
 If you're using `user: "1000:1000"` in docker-compose.yml, global npm installs will work without any additional configuration.

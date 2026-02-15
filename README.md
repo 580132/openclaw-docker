@@ -142,6 +142,81 @@ Config is stored in `~/.openclaw/` and persists across container restarts.
 - [OpenClaw GitHub](https://github.com/openclaw/openclaw)
 - [Discord Community](https://discord.gg/clawd)
 
+## Uninstallation
+
+### One-Line Uninstall
+
+**Linux / macOS:**
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.sh)
+```
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.ps1 | iex
+```
+
+This will:
+- ✅ Stop and remove all containers
+- ✅ Ask before removing configuration and workspace data
+- ✅ Ask before removing Docker image
+- ✅ Ask before removing installation directory
+
+### Uninstall Options
+
+**Linux / macOS:**
+
+```bash
+# Keep configuration and workspace data
+bash <(curl -fsSL https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.sh) --keep-data
+
+# Keep Docker image (useful if reinstalling later)
+bash <(curl -fsSL https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.sh) --keep-image
+
+# Skip all confirmation prompts
+bash <(curl -fsSL https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.sh) --force
+
+# Custom install directory
+bash <(curl -fsSL https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.sh) --install-dir /opt/openclaw
+```
+
+**Windows (PowerShell):**
+
+```powershell
+# Keep configuration and workspace data
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.ps1))) -KeepData
+
+# Keep Docker image (useful if reinstalling later)
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.ps1))) -KeepImage
+
+# Skip all confirmation prompts
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.ps1))) -Force
+
+# Custom install directory
+& ([scriptblock]::Create((irm https://raw.githubusercontent.com/phioranex/openclaw-docker/main/uninstall.ps1))) -InstallDir "C:\openclaw"
+```
+
+### Manual Uninstall
+
+If you prefer to uninstall manually:
+
+```bash
+# Stop and remove containers
+docker stop openclaw-gateway openclaw-socat
+docker rm openclaw-gateway openclaw-socat openclaw-cli
+
+# Remove data (optional)
+rm -rf ~/.openclaw
+
+# Remove Docker image (optional)
+docker rmi ghcr.io/phioranex/openclaw-docker:latest
+
+# Remove installation directory (optional)
+rm -rf ~/openclaw
+```
+
 ## Troubleshooting
 
 ### Permission Issues on Synology NAS
